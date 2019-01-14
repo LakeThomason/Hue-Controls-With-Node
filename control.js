@@ -1,31 +1,34 @@
+// imports
 require("dotenv").config();
 const axios = require("axios");
-/*****************************************************************************/
-// Change these values
-/*****************************************************************************/
+
+// dotenv data
 const ip = process.env.BRIDGE_IP;
 const username = process.env.BRIDGE_USERNAME;
-const lightsObj = {
-  closetLight: "1",
-  deskLight: "2",
-  windowLight: "3",
-  bedLight: "4"
-};
-/*****************************************************************************/
 
-/*****************************************************************************/
+// Phillips hue request properties
 const endPoint = "lights";
 const maxBrightness = 254;
 const minBrightness = 1;
 const brightnessIncrement = 40;
 const maxHue = 65535;
 
-this.lightState = {};
+// Full light state
+this.lightState;
+// Simple lights object with light IDs
+this.lightsObj;
 
 // Get light state, then run the command
 function main() {
   parseLightState(function(state) {
     this.lightState = state;
+    this.lightsObj = {};
+    // Make this.lightsObj
+    for (let key in this.lightState) {
+      let light = {};
+      light[this.lightState[key].name] = key;
+      Object.assign(this.lightsObj, light);
+    }
     parseCommand();
   });
 }
@@ -66,16 +69,7 @@ function parseCommand() {
 
 function lightsOn(bool) {
   for (let key in lightsObj) {
-    axios
-      .put(`http://${ip}/api/${username}/${endPoint}/${lightsObj[key]}/state`, {
-        on: bool
-      })
-      .then(function(response) {
-        console.log(response.data);
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
+    setLightState(lightsObj[key], { on: bool });
   }
 }
 
