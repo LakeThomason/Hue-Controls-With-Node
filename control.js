@@ -9,8 +9,11 @@ const username = process.env.BRIDGE_USERNAME;
 // Phillips hue request properties
 const endPoint = "lights";
 const maxBrightness = 254;
+const maxSaturation = 254;
 const minBrightness = 1;
+const minSaturation = 1;
 const brightnessIncrement = 40;
+const saturationIncrement = 40;
 const maxHue = 65535;
 
 // Full light state
@@ -48,11 +51,20 @@ function parseCommand() {
   // Single command usage
   if (process.argv.length === 3) {
     switch (process.argv[2]) {
+      case "debug":
+        console.log(this.lightState);
+        break;
       case "lightsOff":
         lightsOn(false);
         break;
       case "lightsOn":
         lightsOn(true);
+        break;
+      case "increaseSaturation":
+        changeLightSaturation(lightsObj, saturationIncrement);
+        break;
+      case "decreaseSaturation":
+        changeLightSaturation(lightsObj, saturationIncrement * -1);
         break;
       case "increaseBrightness":
         changeLightBrightness(lightsObj, brightnessIncrement);
@@ -94,6 +106,24 @@ function changeLightBrightness(lights, increment, transition = 0) {
       newBrightness = currentBrightness + increment;
     }
     setLightState(lights[key], { bri: newBrightness });
+  }
+}
+
+function changeLightSaturation(lights, increment, transition = 0) {
+  for (key in lights) {
+    let newSaturation,
+      currentSaturation = parseInt(this.lightState[lights[key]].state.sat);
+    // Check if increment is too close to sat minimum
+    if (increment < 0 && currentSaturation <= minSaturation - increment) {
+      newSaturation = minSaturation;
+    }
+    // Check if increment is too close to sat maximum
+    else if (increment > 0 && currentSaturation >= maxSaturation - increment) {
+      newSaturation = maxSaturation;
+    } else {
+      newSaturation = currentSaturation + increment;
+    }
+    setLightState(lights[key], { sat: newSaturation });
   }
 }
 
