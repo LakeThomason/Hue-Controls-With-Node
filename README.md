@@ -4,7 +4,7 @@ A small set of Phillips hue bulb commands executed with node shell. Useful for c
 
 ### Installation
 
-Install axios and dotenv
+Install axios and dotenv in your project directory
 
 ```sh
 $ npm install axios
