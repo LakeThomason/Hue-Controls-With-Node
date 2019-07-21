@@ -1,2 +1,2 @@
 cd %userprofile%\Documents\GitHub\Hue-Controls-With-Node
-node control.js lightsOff
+node dist/control.js lightsOff

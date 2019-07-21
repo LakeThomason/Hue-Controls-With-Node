@@ -1,2 +1,2 @@
 cd %userprofile%\Documents\GitHub\Hue-Controls-With-Node
-node control.js decreaseSaturation
+node dist/control.js decreaseSaturation

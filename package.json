@@ -1,0 +1,32 @@
+{
+  "name": "hue-controls-with-node",
+  "version": "1.0.0",
+  "description": "A small set of Phillips hue bulb commands executed with node shell. Useful for creating batch files that can be easily assigned to keyboard and mice macro keys.",
+  "main": "control.js",
+  "scripts": {
+    "build": "tsc",
+    "prebuild": "(tslint -c tslint.json -p tsconfig.json --fix) && ((rd dist /s /q) || (exit 0))",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LakeThomason/Hue-Controls-With-Node.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LakeThomason/Hue-Controls-With-Node/issues"
+  },
+  "homepage": "https://github.com/LakeThomason/Hue-Controls-With-Node#readme",
+  "dependencies": {
+    "@types/dotenv": "^6.1.1",
+    "axios": "^0.19.0",
+    "dotenv": "^8.0.0"
+  },
+  "devDependencies": {
+    "tslint": "^5.18.0",
+    "typescript": "^3.5.3",
+    "@types/node": "^11.12.0"
+  }
+}

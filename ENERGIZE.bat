@@ -1,2 +1,2 @@
 cd %userprofile%\Documents\GitHub\Hue-Controls-With-Node
-node control.js ENERGIZE
+node dist/control.js energize
