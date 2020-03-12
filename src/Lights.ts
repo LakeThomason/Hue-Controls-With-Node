@@ -3,13 +3,14 @@ import ILightResponse from "./interfaces/ILightResponse";
 import ILightState from "./interfaces/ILightState";
 
 // Phillips hue request properties
+const BRIDGE_ADDRESS_FINDER_ADDRESS = "https://discovery.meethue.com/";
 const MAX_UINT8 = 254;
 const MIN_UINT8 = 0;
 const MAX_HUE = 65535;
 const MIN_HUE = 0;
 const BRIGHNESS_INCREMENT = 40;
 const SATURATION_INCREMENT = 40;
-const LIGHTS_ENDPOINT = `http://${process.env.BRIDGE_IP}/api/${process.env.BRIDGE_USERNAME}/lights`;
+let LIGHTS_ENDPOINT = "";
 
 // Class that controls a group of lights
 export default class Lights {
@@ -19,24 +20,27 @@ export default class Lights {
    *  Reaches out to all the lights connected to the bridge and parses their state
    */
   public setup(): Promise<boolean> {
-    return axios
-      .get(LIGHTS_ENDPOINT)
-      .then((response) => {
-        // Add all lights to the array
-        for (const lightID in response.data) {
-          if (response.data[lightID].hasOwnProperty("name", "state")) {
-            this.lights.push(Object.assign(
-              { name: response.data[lightID].name },
-              response.data[lightID].state
-            ) as ILightState);
+    // Get bridge IP because you didn't give your bridge a static IP or something
+    return axios.get(BRIDGE_ADDRESS_FINDER_ADDRESS).then((response) => {
+      LIGHTS_ENDPOINT = `http://${response.data[0].internalipaddress}/api/${process.env.BRIDGE_USERNAME}/lights`;
+      return axios
+        .get(LIGHTS_ENDPOINT)
+        .then((response) => {
+          // Add all lights to the array
+          for (const lightID in response.data) {
+            if (response.data[lightID].hasOwnProperty("name", "state")) {
+              this.lights.push(
+                Object.assign({ name: response.data[lightID].name }, response.data[lightID].state) as ILightState
+              );
+            }
           }
-        }
-        return true;
-      })
-      .catch((error) => {
-        console.error(error);
-        return false;
-      });
+          return true;
+        })
+        .catch((error) => {
+          console.error(error);
+          return false;
+        });
+    });
   }
 
   /**

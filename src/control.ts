@@ -49,12 +49,40 @@ function parseCommand(): Array<Promise<ILightResponse>> {
       return lights.setLightHue(scenes.fireAndIce as ILightState[]);
     case "boink":
       return lights.setLightHue(scenes.boink as ILightState[]);
+    case "boinkv2":
+      return lights.setLightHue(scenes.boinkv2 as ILightState[]);
     default:
       console.log(lights.lights);
   }
 }
 
 const scenes = {
+  boinkv2: [
+    {
+      // door
+      bri: 1,
+      hue: 57211,
+      sat: 254
+    },
+    {
+      // desk
+      bri: 1,
+      hue: 58818,
+      sat: 250
+    },
+    {
+      // closet
+      bri: 1,
+      hue: 61707,
+      sat: 248
+    },
+    {
+      // bed
+      bri: 35,
+      hue: 52818,
+      sat: 200
+    }
+  ],
   nightLight: [
     {
       bri: 1,
